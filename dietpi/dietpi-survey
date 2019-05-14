@@ -12,12 +12,12 @@
 	# - https://dietpi.com/phpbb/viewtopic.php?f=8&t=20
 	# - Sends DietPi statistics to SFTP server (eg: what programs are installed, hardware model)
 	# - Allows the DietPi project to focus on areas based on popularity.
-	# - No private data is sent. Noone can indentify you.
-	# - Runs on dietpi-update and when user installs software using dietpi-software
+	# - No private data is sent. No one can identify you.
+	# - Runs on dietpi-update and when users install softwares using dietpi-software
 	#
 	# Usage:
-	# - /DietPi/dietpi/dietpi-survey	Interactively let user opt in or opt out and purge existing survey data
-	# - /DietPi/dietpi/dietpi-survey 1	Non-interactively send survey data or empty file, based on previous user choice
+	# - /DietPi/dietpi/dietpi-survey	Ask user if he/she want to participate to the survey (opting out purge existing survey data,opting in send the report)
+	# - /DietPi/dietpi/dietpi-survey 1	Either send survey or an empty file based on user preference stored in .dietpi-survey  
 	#
 	# File sent format:
 	# $(sed -n 5p /DietPi/dietpi/.hw_model).txt
@@ -35,9 +35,10 @@
 	# Grab Input (valid interger)
 	disable_error=1 G_CHECK_VALIDINT "$1" && INPUT=$1 || INPUT=0
 
-	# Force opted in for automated installations by default
+	# OPTED_IN default value need to be set to 1 for cases where no user preference exist.
+	# It's required to be able to generate a demo file to show to the user before he/she accept to opt-in or not.  
 	OPTED_IN=1 # 1=yes | 0=no and purge data
-
+	
 	DIETPI_VERSION="$G_DIETPI_VERSION_CORE.$G_DIETPI_VERSION_SUB"
 	UNIQUE_ID=$(sed -n 5p /DietPi/dietpi/.hw_model)
 	UPLOAD_FILENAME="$UNIQUE_ID.txt"
@@ -47,7 +48,11 @@
 	SFTP_PASS='upload2dietpi'
 
 	FP_SETTINGS='/DietPi/dietpi/.dietpi-survey'
-	Write_Settings(){ echo $OPTED_IN > $FP_SETTINGS; }
+
+	Write_Settings(){
+		echo $OPTED_IN > $FP_SETTINGS; 
+	}
+	
 	Read_Settings(){
 
 		OPTED_IN=$(<$FP_SETTINGS)
