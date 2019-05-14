@@ -38,7 +38,7 @@
 	# OPTED_IN default value need to be set to 1 for cases where no user preference exist.
 	# It's required to be able to generate a demo file to show to the user before he/she accept to opt-in or not.  
 	OPTED_IN=1 # 1=yes | 0=no and purge data
-	
+
 	DIETPI_VERSION="$G_DIETPI_VERSION_CORE.$G_DIETPI_VERSION_SUB"
 	UNIQUE_ID=$(sed -n 5p /DietPi/dietpi/.hw_model)
 	UPLOAD_FILENAME="$UNIQUE_ID.txt"
@@ -50,7 +50,9 @@
 	FP_SETTINGS='/DietPi/dietpi/.dietpi-survey'
 
 	Write_Settings(){
-		echo $OPTED_IN > $FP_SETTINGS; 
+
+		echo $OPTED_IN > $FP_SETTINGS;
+
 	}
 	
 	Read_Settings(){
